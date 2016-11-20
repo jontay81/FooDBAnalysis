@@ -1,0 +1,56 @@
+FooDB.ca Database Analysis
+========================================================
+author: Jon Taylor
+date: 11/20/16
+autosize: true
+
+Intro
+========================================================
+
+This project will analyze the dataset found at <http://FooDB.ca>.
+
+The dataset contains:
+
+- Foods
+- Chemical Compounds Found in Foods
+- Chemical Data
+- Metabolism and Reaction Pathway Data
+- Flavor Data
+
+Dataset
+========================================================
+The dataset consists of several files. We'll work with these:
+
+- Foods.csv 
+- Compounds.csv
+- Contents.csv
+
+
+Filtering the Data
+========================================================
+We selected a few fruits and filtered the data:
+
+```r
+fruits <-  c('Apple', 'Pear', 'Pineapple', 'Peach', 'Watermelon',  'Banana')
+
+foods2 <- filter(foods, name %in% fruits)
+
+contents2 <- filter(contents, orig_food_common_name %in% fruits) %>%  filter(orig_food_part=='Fruit') %>% filter(source_type=='Compound') %>%      filter(orig_min != 'NULL')
+```
+
+Selecting Compounds and Merging Data
+========================================================
+Finally, we select the appropriate compounds and merge the data:
+
+
+```r
+compounds2 <- filter(compounds, id %in% contents2$source_id)
+
+combined2 <- merge(contents2, compounds2, by.x="source_id", by.y="id")
+
+filtered.data <- select(combined2, orig_food_common_name, orig_source_name, orig_med, description, moldb_average_mass, moldb_inchikey)
+```
+
+
+
+
