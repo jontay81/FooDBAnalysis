@@ -33,7 +33,8 @@ ui <- fluidPage(
                                  
             htmlOutput("event")
         ),
-        mainPanel(plotlyOutput("fruitPlot"))
+        mainPanel(plotlyOutput("fruitPlot"),
+                  htmlOutput("docs"))
     )
 )
 
@@ -69,7 +70,31 @@ server <- function(input, output) {
                   "<b>Description:</b>", data2$description))
             
         }
+        
     })
+    
+    output$docs <- renderPrint({
+    
+        paste("<b>FooDB Data Viewer</b><br/>",
+              "Use the checkbox group above to select fruits. <br/><br/>",
+              
+              "The plot will output the chemical compounds found in each fruit<br/>
+               with their concentration on the Y axis and their Molecular Weights<br/>
+               on the X axis.<br/><br/>",
+
+              "Click on a point to view chemical data about that compound<br/><br/>",
+              
+              "Scalbert, A.; Andres-Lacueva, C.; Arita, M.; Kroon, P.; Manach, C.; Urpi-Sarda, M.; Wishart, D.S. (2011). <br/>
+               'Databases on Food Phytochemicals and Their Health-Promoting Effects'. <br/>
+               J. Agric. Food Chem. 59 (9): 4331–4348. doi:10.1021/jf200591d. PMID 21438636.<br/><br/>",
+              
+              paste( "<a target='_blank'href=http://foodb.ca/",
+                    " <b>FooDB.ca</b> </a>",sep=""),
+              
+              sep="")
+        
+    })
+    
 }
 
 
