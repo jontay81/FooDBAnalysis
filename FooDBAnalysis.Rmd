@@ -1,0 +1,75 @@
+---
+title: "FooDB Analysis"
+author: "Jon Taylor"
+date: "November 20, 2016"
+output: html_document
+---
+
+```{R, message=FALSE, warning=FALSE}
+setwd("~/code/R/FooDBAnalysis/")
+
+library(dplyr)
+
+external.descriptors <- read.csv("foodb_2016-11-18/compound_external_descriptors.csv")
+compounds <- read.csv("foodb_2016-11-18/compounds.csv")
+compounds.flavors <- read.csv("foodb_2016-11-18/compounds_flavors.csv")
+foods <- read.csv("foodb_2016-11-18/foods.csv")
+flavors <- read.csv("foodb_2016-11-18/flavors.csv")
+```
+
+
+```{R}
+str(compounds) #public_id, name, description, moldb_smiles?, moldb_average_mass, moldb_inchikey, klass, subklass,direct_parent
+
+str(compounds.flavors) #compound_id, flavor_id
+str(external.descriptors) #compound_id, annotations
+str(foods)
+str(flavors)
+```
+
+
+
+```{R}
+
+fruits <-  c('Apple', 'Pear', 'Pineapple', 'Peach',
+             'Watermelon',  'Banana')
+
+foods2 <- filter(foods, name %in% fruits)
+
+contents2 <- filter(contents, orig_food_common_name %in% fruits) %>%
+                filter(orig_food_part=='Fruit') %>%
+                    filter(source_type=='Compound') %>%
+                        filter(orig_min != 'NULL')
+
+#create middle value between min and max for plotting
+contents2$orig_med <- (as.numeric(contents2$orig_min) + as.numeric(contents2$orig_max)) / 2                            
+
+compounds2 <- filter(compounds, id %in% contents2$source_id)
+
+
+combined2 <- merge(contents2, compounds2, by.x="source_id", by.y="id")
+
+
+#compounds.flavors2 <- filter(compounds.flavors, compound_id %in% combined2$id)
+
+#flavors2 <- filter(flavors, id %in% compounds.flavors2$id)
+
+filtered.data <- select(combined2, orig_food_common_name, orig_source_name, 
+                orig_med, description, moldb_average_mass, moldb_inchikey)
+
+write.csv(filtered.data, "filtered_data.csv")
+```
+
+
+```{R}
+library(plotly)
+
+data <- read.csv("filtered_data.csv")
+data <- filter(data, compound != 'WATER') #remove water
+
+names(data) <- c('x', 'fruit', 'compound', 'concentration', 'description', 'mass', 'inchikey')
+
+plot_ly(data=data, x = ~mass, y = ~concentration, color = ~fruit, type='scatter', mode = 'markers')
+
+                 
+                 
