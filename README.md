@@ -7,7 +7,7 @@ The website is located at http://foodb.ca/
 Downloads for the csv files are located at http://foodb.ca/downloads
 
 
-Citations:
+##Citations
 
 Scalbert, A.; Andres-Lacueva, C.; Arita, M.; Kroon, P.; Manach, C.; Urpi-Sarda, M.; Wishart, D.S. (2011). "Databases on Food Phytochemicals and Their Health-Promoting Effects". J. Agric. Food Chem. 59 (9): 4331–4348. doi:10.1021/jf200591d. PMID 21438636.
 
